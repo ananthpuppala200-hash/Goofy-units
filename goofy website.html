@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Absurd Unit Converter</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
+
+    body {
+      font-family: 'Comic Neue', cursive;
+      background: #fffdd0;
+      color: #222;
+      text-align: center;
+      padding: 2rem;
+      animation: hue 10s infinite linear;
+    }
+
+    @keyframes hue {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+
+    input, select, button {
+      padding: 0.7rem;
+      margin: 0.5rem;
+      font-size: 1.2rem;
+      border-radius: 12px;
+      border: 2px solid #ff69b4;
+      background: #ffebcd;
+      color: #d2691e;
+      transform: rotate(-2deg);
+    }
+
+    button {
+      background: #ff69b4;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transform: rotate(2deg);
+    }
+
+    button:hover {
+      background: #ff1493;
+      transform: rotate(-2deg);
+    }
+
+    .results {
+      margin-top: 2rem;
+      text-align: left;
+      display: inline-block;
+      width: 90%;
+      max-width: 700px;
+      background: #fff8dc;
+      padding: 1rem;
+      border-radius: 16px;
+      box-shadow: 5px 5px 20px rgba(0,0,0,0.2);
+      transform: rotate(-1deg);
+    }
+
+    .result-item {
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      background: #ffd700;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      transform: rotate(1deg);
+    }
+
+    .message {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      color: #ff4500;
+      font-weight: bold;
+      transform: rotate(-1deg);
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #ff4500;
+      transform: rotate(-3deg);
+      text-shadow: 2px 2px #ffd700;
+    }
+
+    p {
+      font-size: 1.3rem;
+      transform: rotate(1deg);
+    }
+  </style>
+</head>
+<body>
+  <h1>⚡ Absurd Unit Converter ⚡</h1>
+  <p>Enter a value and unit, and we’ll tell you what ridiculous equivalent it is.</p>
+
+  <input type="number" id="inputValue" placeholder="Enter value">
+  <select id="inputType">
+    <option value="meters">Meters</option>
+    <option value="kilograms">Kilograms</option>
+    <option value="seconds">Seconds</option>
+    <option value="joules">Joules</option>
+    <option value="liters">Liters</option>
+    <option value="smiles">Smiles</option>
+    <option value="hiccups">Hiccups</option>
+    <option value="sneezes">Sneezes</option>
+    <option value="unicorns">Unicorns</option>
+    <option value="quantumFarts">Quantum Farts</option>
+    <option value="tacoStacks">Taco Stacks</option>
+  </select>
+  <button onclick="convertUnits()">Convert!</button>
+
+  <div class="results" id="results"></div>
+  <div class="message" id="message"></div>
+
+  <script>
+    let convertCount = 0;
+
+    const absurdUnits = {
+      meters: [
+        { name: "Bananas", value: 0.2, abbr: "BNN" },
+        { name: "Pizzas", value: 0.35, abbr: "PZA" },
+        { name: "Toilet Paper Rolls", value: 0.1, abbr: "TPR" },
+        { name: "Giraffes", value: 5.5, abbr: "GIR" }
+      ],
+      kilograms: [
+        { name: "iPhones", value: 0.2, abbr: "IPH" },
+        { name: "Bricks", value: 2.5, abbr: "BRK" },
+        { name: "Cats", value: 4, abbr: "CAT" }
+      ],
+      seconds: [
+        { name: "TikTok Scrolls", value: 5, abbr: "TTS" },
+        { name: "Microwave Minutes", value: 60, abbr: "MM" },
+        { name: "Boiled Eggs", value: 420, abbr: "EGG" }
+      ],
+      joules: [
+        { name: "Bananas (Calories)", value: 439000, abbr: "BNR" },
+        { name: "Pizza Slices", value: 1.19e6, abbr: "PZA" },
+        { name: "AA Batteries", value: 10000, abbr: "BAT" }
+      ],
+      liters: [
+        { name: "Teaspoons", value: 0.005, abbr: "TS" },
+        { name: "Soda Cans", value: 0.355, abbr: "SOD" },
+        { name: "Bathtubs", value: 150, abbr: "BTB" }
+      ],
+      smiles: [
+        { name: "Beaming Faces", value: 1, abbr: "SM" },
+        { name: "Grins", value: 0.5, abbr: "GRN" },
+        { name: "Chuckles", value: 0.2, abbr: "CHC" }
+      ],
+      hiccups: [
+        { name: "Tiny Hiccups", value: 1, abbr: "HIC" },
+        { name: "Medium Hiccups", value: 3, abbr: "MHC" },
+        { name: "Mega Hiccups", value: 10, abbr: "MHG" }
+      ],
+      sneezes: [
+        { name: "Achoos", value: 1, abbr: "ACH" },
+        { name: "Blessings", value: 2, abbr: "BLZ" },
+        { name: "Snot Rockets", value: 5, abbr: "SRK" }
+      ],
+      unicorns: [
+        { name: "Sparkle Units", value: 1, abbr: "SPU" },
+        { name: "Rainbow Horns", value: 0.5, abbr: "RNH" },
+        { name: "Magic Hooves", value: 2, abbr: "MHO" }
+      ],
+      quantumFarts: [
+        { name: "Subatomic Puffs", value: 1, abbr: "QFP" },
+        { name: "Entangled Whiffs", value: 0.1, abbr: "EQW" },
+        { name: "Spooky Air", value: 0.05, abbr: "SPA" }
+      ],
+      tacoStacks: [
+        { name: "Mini Tacos", value: 1, abbr: "MT" },
+        { name: "Fiesta Towers", value: 0.2, abbr: "FFT" },
+        { name: "Crunch Layers", value: 0.5, abbr: "CLY" }
+      ]
+    };
+
+    function getRandomUnit(category) {
+      const units = absurdUnits[category];
+      return units[Math.floor(Math.random() * units.length)];
+    }
+
+    function convertUnits() {
+      convertCount++;
+      const inputVal = parseFloat(document.getElementById("inputValue").value);
+      const inputType = document.getElementById("inputType").value;
+      const resultsDiv = document.getElementById("results");
+      const messageDiv = document.getElementById("message");
+      resultsDiv.innerHTML = "";
+      messageDiv.innerHTML = "";
+
+      if (isNaN(inputVal) || inputVal <= 0) {
+        resultsDiv.innerHTML = "<p>Please enter a valid positive number.</p>";
+        return;
+      }
+
+      if (convertCount > 10) {
+        messageDiv.innerHTML = "...............ok wow get a life.";
+      } else if (convertCount > 3) {
+        messageDiv.innerHTML = "damn is this fun for you tf?";
+      }
+
+      for (let i = 0; i < 3; i++) {
+        const unit = getRandomUnit(inputType);
+        const converted = inputVal / unit.value;
+        const description = `${converted.toFixed(2)} ${unit.name} (${unit.abbr})`;
+
+        const item = document.createElement("div");
+        item.classList.add("result-item");
+        item.innerHTML = description;
+        resultsDiv.appendChild(item);
+      }
+    }
+  </script>
+</body>
+</html>
